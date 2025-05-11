@@ -10,6 +10,10 @@ import roomescape.auth.infrastructure.JwtTokenProvider;
 import roomescape.member.domain.Member;
 import roomescape.member.domain.Role;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.infrastructure.dto.ReservationDetailData;
+import roomescape.reservation.infrastructure.dto.ReservationDetailData.MemberData;
+import roomescape.reservation.infrastructure.dto.ReservationDetailData.ThemeData;
+import roomescape.reservation.infrastructure.dto.ReservationDetailData.TimeData;
 import roomescape.theme.domain.Theme;
 import roomescape.time.domain.ReservationTime;
 
@@ -28,6 +32,14 @@ public class Fixture {
             3L, 1L, THEME_3, LocalDate.now().plusDays(1), RESERVATION_TIME_3);
     public static final Member MEMBER_1 = new Member(1L, "test@email.com", "password", "멍구", Role.ADMIN);
     public static final Member MEMBER_2 = new Member(2L, "test2@email.com", "password2", "멍구2", Role.ADMIN);
+
+    public static final ReservationDetailData RESERVATION_DETAIL_DATA = new ReservationDetailData(
+            1L,
+            new MemberData(1L, "멍구"),
+            new ThemeData(1L, "테마", "설명", "썸네일.jpg"),
+            LocalDate.of(2025, 1, 1),
+            new TimeData(1L, LocalTime.of(10, 0))
+    );
 
     public static final String createTokenByMemberId(JwtTokenProvider jwtTokenProvider, Long memberId) {
         String payload = String.valueOf(memberId);
