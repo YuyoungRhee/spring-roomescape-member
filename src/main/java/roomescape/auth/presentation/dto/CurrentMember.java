@@ -1,6 +1,6 @@
 package roomescape.auth.presentation.dto;
 
-public record LoginMember(
+public record CurrentMember(
         Long id,
         String name
 ) {

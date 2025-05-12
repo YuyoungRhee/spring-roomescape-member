@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.auth.application.AuthService;
-import roomescape.auth.presentation.dto.LoginMember;
+import roomescape.auth.presentation.dto.CurrentMember;
 import roomescape.auth.presentation.dto.request.TokenRequest;
 import roomescape.auth.application.dto.TokenDto;
 import roomescape.auth.infrastructure.CookieProvider;
@@ -46,7 +46,7 @@ public class TokenLoginController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<MemberResponse> checkMember(@AuthenticatedMember LoginMember member) {
+    public ResponseEntity<MemberResponse> checkMember(@AuthenticatedMember CurrentMember member) {
         MemberResponse memberResponse = new MemberResponse(member.name());
         return ResponseEntity.ok(memberResponse);
     }

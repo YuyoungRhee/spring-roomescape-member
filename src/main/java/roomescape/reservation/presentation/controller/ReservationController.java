@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.auth.presentation.dto.LoginMember;
+import roomescape.auth.presentation.dto.CurrentMember;
 import roomescape.auth.presentation.AuthenticatedMember;
 import roomescape.reservation.application.ReservationQueryService;
 import roomescape.reservation.application.ReservationService;
@@ -41,7 +41,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationDetailResponse> createReservation(
             @Valid @RequestBody ReservationRequest request,
-            @AuthenticatedMember LoginMember member) {
+            @AuthenticatedMember CurrentMember member) {
         ReservationDto reservationDto = service.registerReservationForUser(request, member.id());
 
         ReservationDetailData data = queryService.getReservationDetailById(reservationDto.id());

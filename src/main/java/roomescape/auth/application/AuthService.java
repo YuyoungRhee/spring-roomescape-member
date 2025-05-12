@@ -1,14 +1,13 @@
 package roomescape.auth.application;
 
 import static roomescape.auth.exception.AuthErrorCode.INVALID_PASSWORD;
-import static roomescape.auth.exception.AuthErrorCode.INVALID_TOKEN;
 import static roomescape.auth.exception.AuthErrorCode.MEMBER_NOT_FOUND;
 
 import org.springframework.stereotype.Service;
-import roomescape.auth.presentation.dto.request.TokenRequest;
 import roomescape.auth.application.dto.TokenDto;
 import roomescape.auth.exception.AuthorizationException;
 import roomescape.auth.infrastructure.JwtTokenProvider;
+import roomescape.auth.presentation.dto.request.TokenRequest;
 import roomescape.member.domain.Member;
 import roomescape.member.domain.repository.MemberRepository;
 
@@ -39,19 +38,7 @@ public class AuthService {
                 .orElseThrow(() -> new AuthorizationException(MEMBER_NOT_FOUND));
     }
 
-    public Member findMemberByToken(String token) {
-        validateMemberToken(token);
-        Long id = jwtTokenProvider.getMemberId(token);
-        return getMemberById(id);
-    }
-
-    private void validateMemberToken(String token) {
-        if(!jwtTokenProvider.validateToken(token)) {
-            throw new AuthorizationException(INVALID_TOKEN);
-        }
-    }
-
-    private Member getMemberById(Long id) {
+    public Member getMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new AuthorizationException(MEMBER_NOT_FOUND));
     }

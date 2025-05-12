@@ -1,31 +1,28 @@
 package roomescape.auth.presentation;
 
+import static roomescape.auth.constants.AuthConstants.JWT_PAYLOAD;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import roomescape.auth.application.AuthService;
-import roomescape.auth.presentation.dto.LoginMember;
 import roomescape.auth.exception.AuthErrorCode;
 import roomescape.auth.exception.AuthorizationException;
 import roomescape.auth.infrastructure.CookieAuthorizationExtractor;
+import roomescape.auth.infrastructure.JwtPayload;
 import roomescape.auth.infrastructure.JwtTokenProvider;
-import roomescape.member.domain.Member;
 
 @Component
 public class BasicAuthorizationInterceptor implements HandlerInterceptor {
 
     private final CookieAuthorizationExtractor extractor;
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthService authService;
 
     public BasicAuthorizationInterceptor(CookieAuthorizationExtractor extractor,
-                                         JwtTokenProvider jwtTokenProvider,
-                                         AuthService authService) {
+                                         JwtTokenProvider jwtTokenProvider) {
         this.extractor = extractor;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.authService = authService;
     }
 
     @Override
@@ -39,8 +36,9 @@ public class BasicAuthorizationInterceptor implements HandlerInterceptor {
         String token = result.get();
         validateToken(token);
 
-        Member member = authService.findMemberByToken(token);
-        request.setAttribute("loginMember", new LoginMember(member.getId(), member.getName()));
+        JwtPayload payLoad = jwtTokenProvider.getPayLoad(token);
+
+        request.setAttribute(JWT_PAYLOAD, payLoad);
         return true;
     }
 

@@ -56,28 +56,6 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("유효한 토큰으로 사용자를 조회할 수 있다")
-    void findMemberByToken_success() {
-        // given
-        String token = "valid-token";
-        String email = "email@test.com";
-        Member member = new Member(1L, email, "pass", "멍구", Role.USER);
-
-        Long memberId = 1L;
-
-        given(jwtTokenProvider.validateToken(token)).willReturn(true);
-        given(jwtTokenProvider.getMemberId(token)).willReturn(memberId);
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-
-        // when
-        Member result = authService.findMemberByToken(token);
-
-        // then
-        assertThat(result.getName()).isEqualTo("멍구");
-        verify(jwtTokenProvider).getMemberId(token);
-    }
-
-    @Test
     @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다")
     void createToken_wrongPassword() {
         // given
@@ -92,23 +70,9 @@ class AuthServiceTest {
                 .hasMessage(INVALID_PASSWORD.getMessage());
     }
 
-    @Test
-    @DisplayName("유효하지 않은 토큰은 예외를 발생시킨다")
-    void findMemberByToken_invalidToken() {
-        // given
-        String token = "invalid-token";
-
-        given(jwtTokenProvider.validateToken(token)).willReturn(false);
-
-        // when & then
-        assertThatThrownBy(() -> authService.findMemberByToken(token))
-                .isInstanceOf(AuthorizationException.class)
-                .hasMessage(INVALID_TOKEN.getMessage());
-    }
-
     @DisplayName("존재하지 않는 이메일로 로그인 시도하면 예외를 발생시킨다.")
     @Test
-    void findMemberByToken_emailNotFound() {
+    void createToken_emailNotFound() {
         // given
         TokenRequest tokenRequest = new TokenRequest("notfound@email.com", "password");
         given(memberRepository.findByEmail(tokenRequest.email())).willReturn(Optional.empty());
@@ -117,5 +81,37 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.createToken(tokenRequest))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessageContaining(MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("member를 id로 조회할 수 있다.")
+    void findMemberByToken_success() {
+        // given
+        String email = "email@test.com";
+        long memberId = 1L;
+        Member member = new Member(memberId, email, "pass", "멍구", Role.USER);
+
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
+
+        // when
+        Member result = authService.getMemberById(memberId);
+
+        // then
+        assertThat(result.getName()).isEqualTo("멍구");
+        verify(memberRepository).findById(memberId);
+    }
+
+    @Test
+    @DisplayName("찾을 수 없는 memberId는 유효성 예외를 발생시킨다.")
+    void findMemberByToken_invalidToken() {
+        // given
+        long invalidMemberId = 99L;
+
+        given(memberRepository.findById(invalidMemberId)).willThrow(new AuthorizationException(INVALID_TOKEN));
+
+        // when & then
+        assertThatThrownBy(() -> authService.getMemberById(invalidMemberId))
+                .isInstanceOf(AuthorizationException.class)
+                .hasMessage(INVALID_TOKEN.getMessage());
     }
 }

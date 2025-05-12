@@ -1,5 +1,7 @@
 package roomescape.auth.infrastructure;
 
+import static roomescape.auth.constants.AuthConstants.COOKIE_TOKEN_KEY;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -8,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CookieAuthorizationExtractor implements AuthorizationExtractor<Optional<String>> {
-    private static final String TOKEN_COOKIE_NAME = "token";
 
     public Optional<String> extract(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -18,7 +19,7 @@ public class CookieAuthorizationExtractor implements AuthorizationExtractor<Opti
         }
 
         return Arrays.stream(cookies)
-                .filter(cookie -> TOKEN_COOKIE_NAME.equals(cookie.getName()))
+                .filter(cookie -> COOKIE_TOKEN_KEY.equals(cookie.getName()))
                 .findAny()
                 .map(Cookie::getValue);
     }
