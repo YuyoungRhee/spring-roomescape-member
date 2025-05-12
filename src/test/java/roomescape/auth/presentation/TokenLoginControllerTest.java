@@ -56,7 +56,7 @@ class TokenLoginControllerTest extends AbstractRestDocsTest {
     void checkMember_withCookieToken() {
         // given
         JdbcHelper.insertMember(jdbcTemplate, MEMBER_1);
-        String payload = String.valueOf(MEMBER_1.getId());
+        Long payload = MEMBER_1.getId();
         String token = jwtTokenProvider.createToken(payload, Role.USER);
 
         // when & then

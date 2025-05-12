@@ -28,9 +28,9 @@ public class JwtTokenProvider {
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
-    public String createToken(String payload, Role role) {
+    public String createToken(Long id, Role role) {
         Claims claims = Jwts.claims()
-                .setSubject(payload);
+                .setSubject(String.valueOf(id));
         claims.put("role", role.name());
         Date now = new Date();
         Date expiry = new Date(now.getTime() + validityInMilliseconds);
@@ -49,7 +49,7 @@ public class JwtTokenProvider {
         return new JwtPayload(memberId, role);
     }
 
-    public Long getMemberId(String token) {
+    private Long getMemberId(String token) {
         try {
             String subject = Jwts.parserBuilder()
                     .setSigningKey(secretkey)

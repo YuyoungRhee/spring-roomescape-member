@@ -28,8 +28,7 @@ public class AuthService {
             throw new AuthorizationException(INVALID_PASSWORD);
         }
 
-        String payload = String.valueOf(member.getId());
-        String accessToken = jwtTokenProvider.createToken(payload, member.getRole());
+        String accessToken = jwtTokenProvider.createToken(member.getId(), member.getRole());
         return new TokenDto(accessToken);
     }
 

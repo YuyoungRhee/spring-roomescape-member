@@ -43,8 +43,7 @@ class AuthServiceTest {
         Member member = new Member(memberId, "email@test.com", "1234", "멍구", Role.USER);
 
         given(memberRepository.findByEmail("email@test.com")).willReturn(Optional.of(member));
-        String payload = String.valueOf(memberId);
-        given(jwtTokenProvider.createToken(payload, member.getRole())).willReturn("token-value");
+        given(jwtTokenProvider.createToken(memberId, member.getRole())).willReturn("token-value");
 
         // when
         TokenDto response = authService.createToken(request);
@@ -52,7 +51,7 @@ class AuthServiceTest {
 
         // then
         assertThat(response.accessToken()).isEqualTo("token-value");
-        verify(jwtTokenProvider).createToken(payload, member.getRole());
+        verify(jwtTokenProvider).createToken(memberId, member.getRole());
     }
 
     @Test

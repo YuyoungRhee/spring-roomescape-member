@@ -116,8 +116,7 @@ class TimeControllerTest extends AbstractRestDocsTest {
         long memberId = JdbcHelper.insertMemberAndGetKey(jdbcTemplate, MEMBER_1);
         JdbcHelper.insertReservationOnly(jdbcTemplate, RESERVATION_1);
 
-        String payload = String.valueOf(memberId);
-        String token = jwtTokenProvider.createToken(payload, Role.USER);
+        String token = jwtTokenProvider.createToken(memberId, Role.USER);
 
         // when & then
         Long timeId = reservationTime.getId();

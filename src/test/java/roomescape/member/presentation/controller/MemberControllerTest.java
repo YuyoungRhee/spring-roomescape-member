@@ -42,7 +42,7 @@ class MemberControllerTest extends AbstractRestDocsTest {
         JdbcHelper.insertMembers(jdbcTemplate, member1, member2);
 
         // given
-        String token = jwtTokenProvider.createToken(String.valueOf(1L), Role.ADMIN);
+        String token = jwtTokenProvider.createToken(1L, Role.ADMIN);
 
         // when & then
         List<MemberResponse> responses =

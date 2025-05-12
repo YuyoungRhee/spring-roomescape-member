@@ -51,7 +51,7 @@ class AuthInterceptorTest {
     @Test
     @DisplayName("BasicInterceptor가 걸리는 경로는 유효한 토큰의 회원이면 통과")
     void protectedApiWithAuthSucceeds() throws Exception {
-        String token = jwtTokenProvider.createToken("1", Role.USER);
+        String token = jwtTokenProvider.createToken(1L, Role.USER);
         mockMvc.perform(get("/reservations")
                         .cookie(new Cookie("token", token)))
                 .andExpect(status().isOk());
@@ -69,7 +69,7 @@ class AuthInterceptorTest {
     @Test
     @DisplayName("AdminInterceptor가 걸리는 경로는 인증은 됐으나 권한이 없으면 403 반환")
     void adminApiFailsWithoutPermission() throws Exception {
-        String token = jwtTokenProvider.createToken("1", Role.USER);
+        String token = jwtTokenProvider.createToken(1L, Role.USER);
         mockMvc.perform(post("/admin/reservations")
                 .cookie(new Cookie("token", token))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +80,7 @@ class AuthInterceptorTest {
     @Test
     @DisplayName("AdminInterceptor가 걸리는 경로는 admin 권한을 가진 회원이면 통과")
     void adminAccessAllowedForAdminRole() throws Exception {
-        String token = jwtTokenProvider.createToken("1", Role.ADMIN);
+        String token = jwtTokenProvider.createToken(1L, Role.ADMIN);
         mockMvc.perform(post("/admin/reservations")
                 .cookie(new Cookie("token", token))
                 .contentType(MediaType.APPLICATION_JSON)

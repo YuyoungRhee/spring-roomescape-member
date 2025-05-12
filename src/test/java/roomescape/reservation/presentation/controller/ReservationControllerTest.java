@@ -48,8 +48,7 @@ class ReservationControllerTest extends AbstractRestDocsTest {
         JdbcHelper.insertTheme(jdbcTemplate, THEME_1);
         long memberId = JdbcHelper.insertMemberAndGetKey(jdbcTemplate, MEMBER_1);
 
-        String payload = String.valueOf(memberId);
-        String token = jwtTokenProvider.createToken(payload, Role.USER);
+        String token = jwtTokenProvider.createToken(memberId, Role.USER);
 
         givenWithDocs("reservation-add")
                 .contentType(ContentType.JSON)

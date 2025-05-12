@@ -44,8 +44,7 @@ class AdminReservationControllerTest extends AbstractRestDocsTest {
         JdbcHelper.insertMember(jdbcTemplate, MEMBER_1);
         long memberId = MEMBER_1.getId();
 
-        String payload = String.valueOf(memberId);
-        String token = jwtTokenProvider.createToken(payload, Role.ADMIN);
+        String token = jwtTokenProvider.createToken(memberId, Role.ADMIN);
 
         givenWithDocs("adminReservation-add")
                 .contentType(ContentType.JSON)

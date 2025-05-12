@@ -41,9 +41,8 @@ public class Fixture {
             new TimeData(1L, LocalTime.of(10, 0))
     );
 
-    public static final String createTokenByMemberId(JwtTokenProvider jwtTokenProvider, Long memberId) {
-        String payload = String.valueOf(memberId);
-        return jwtTokenProvider.createToken(payload, Role.USER);
+    public static String createTokenByMemberId(JwtTokenProvider jwtTokenProvider, Long memberId) {
+        return jwtTokenProvider.createToken(memberId, Role.USER);
     }
 
     public static final Map<String, Object> RESERVATION_BODY = createReservationBody();

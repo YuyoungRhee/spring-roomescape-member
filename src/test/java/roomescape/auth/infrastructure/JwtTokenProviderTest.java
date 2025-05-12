@@ -26,16 +26,16 @@ class JwtTokenProviderTest {
     @Test
     void createAndParseToken() {
         long id = 1L;
-        String payload = String.valueOf(id);
-        String token = jwtTokenProvider.createToken(payload, Role.USER);
+        Role role = Role.USER;
+        String token = jwtTokenProvider.createToken(id, role);
 
-        assertThat(jwtTokenProvider.getMemberId(token)).isEqualTo(id);
+        assertThat(jwtTokenProvider.getPayLoad(token)).isEqualTo(new JwtPayload(id, role));
     }
 
     @DisplayName("JWT를 생성하면 유효하다")
     @Test
     void validateToken_true_when_valid() {
-        String token = jwtTokenProvider.createToken("test", Role.USER);
+        String token = jwtTokenProvider.createToken(1L, Role.USER);
 
         assertThat(jwtTokenProvider.validateToken(token)).isTrue();
     }
